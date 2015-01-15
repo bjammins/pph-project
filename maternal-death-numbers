@@ -1,0 +1,32 @@
+library(ggplot2)
+setwd("L:/PPH Project/data")
+data<-read.csv("Maternal Death Numbers.csv", header=TRUE)  #hemorrhage-related deaths
+
+data$Name<-factor(data$Name,levels=c("Hemorrhage","Thrombotic pulmonary embolism","Amniotic fluid embolism","Infection","Hypertensive disorders","Cardiomyopathy","Cardiovascular conditions","Anesthesia complications","Non-cardiovascular conditions","Cerebrovascular accident","Unknown"))
+data$Number<-as.numeric(data$Number)
+all_deaths<-sum(data$Number)
+data$percent<-data$Number/sum(data$Number)
+data$percent<-round(data$percent,digits=3)
+
+
+c <- ggplot(data, aes(x=factor(1), y=as.numeric(Number),fill=Name,label=percent))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c <-c + coord_polar(theta="y")
+
+
+
+#all births data
+birth<-read.csv("births_1998_2005.csv", header=TRUE)
+birth$n<-as.numeric(birth$n)
+all_births<-sum(birth$n)
+
+circle<-300000-all_deaths
+df<-rbind("all other births")
+
+d<-ggplot(sum(birth,all_deaths),aes)
+
+
+#MMR Data
+df<-read.csv("CDC_MMR_Data_1987_2009.csv", header=TRUE)
+c <- ggplot(df, aes(x=Year, y=as.numeric(MMR)))
+c+geom_line()+ylim(0,20)
