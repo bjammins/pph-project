@@ -1,0 +1,32 @@
+library(ggplot2)
+setwd("L:/PPH Project/data")
+df<-read.csv("hemorrhage_etiology_data.csv", header=TRUE)  #etiology of hemorrhages
+df<-df[1:10,]
+df$percent<-df$n/df$n[10]
+df$percent<-round(df$percent,digits=4)
+
+df_hem<-df[2:5,]
+
+
+df_hem_total<-sum(df_hem$n)
+
+df_hem$percent<-df_hem$n/df_hem_total
+c <- ggplot(df_hem, aes(x=factor(1), y=as.numeric(n),fill=factor(Hemorrhage.Category),label=percent))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c <-c + coord_polar(theta="y")
+c<-c+geom_text(aes(x=factor(1), y=percent, label=percent,ymax=percent),position=position_fill(width=1))
+
+# atony resulting in transfusion and atony resulting in a hysterectomy
+df_atony<-df[c(8,9),]
+df_atony$percent<-df_atony$n/df$n[2]
+df_atony_row<-cbind("Atony and no transfuion or hysterectomy",as.numeric(df[2,2]-sum(df_atony$n)),0)
+colnames(df_atony_row)<-colnames(df_atony)
+
+df_atony<-rbind(df_atony,df_atony_row)
+df_atony$n<-as.numeric(df_atony$n)
+
+df_atony$percent<-df_atony$n/df$n[2]
+c <- ggplot(df_atony, aes(x=factor(1), y=as.numeric(n),fill=factor(Hemorrhage.Category),label=percent))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c <-c + coord_polar(theta="y")
+c<-c+geom_text(aes(x=factor(1), y=percent, label=percent,ymax=percent),position=position_fill(width=1))
