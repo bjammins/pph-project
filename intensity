@@ -1,0 +1,70 @@
+library(ggplot2)
+library(plyr)
+library(sqldf)
+setwd('L:/PPH Project/df')
+df<-read.csv("Intensity.csv", header=TRUE)
+df<-df[df$Complete.=="TRUE",] #obtain only completed records
+
+
+
+
+
+df$Q31<-factor(df$Q31) #executive
+df$Q31<-revalue(df$Q31, c("0"="Very low", "1"="Low", "2"="Moderate","3"="High", "4"="Very high"))
+df$Q32<-factor(df$Q32) #nurse
+df$Q32<-revalue(df$Q32, c("0"="Very low", "1"="Low", "2"="Moderate","3"="High", "4"="Very high"))
+df$Q33<-factor(df$Q33) #OB
+df$Q33<-revalue(df$Q33, c("0"="Very low", "1"="Low", "2"="Moderate","3"="High", "4"="Very high"))
+df$Q34<-factor(df$Q34) #blood bank
+df$Q34<-revalue(df$Q34, c("0"="Very low", "1"="Low", "2"="Moderate","3"="High", "4"="Very high"))
+df$Q35<-factor(df$Q35) #anesthesia
+df$Q35<-revalue(df$Q35, c("0"="Very low", "1"="Low", "2"="Moderate","3"="High", "4"="Very high"))
+
+ddply(df,.(Collaborative,Period,Q31), c("nrow"))
+
+#Executive Q31:
+df<-arrange(df,Q31)  
+c <- ggplot(df, aes(x=factor(1),y=length(Hospital.ID),fill=Q31))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c<-c+facet_grid(facets=. ~ Collaborative)
+c <-c + coord_polar(theta="y")
+c
+c<-c+geom_text(aes(x=factor(1), y=, label=percent,ymax=percent),position=position_fill(width=1))
+
+#Nurse Q32:
+df<-arrange(df,Q32)  
+c <- ggplot(df, aes(x=factor(1),y=length(Hospital.ID),fill=Q32))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c<-c+facet_grid(facets=. ~ Collaborative)
+c <-c + coord_polar(theta="y")
+c
+c<-c+geom_text(aes(x=factor(1), y=, label=,ymax=1),position=position_fill(width=1))
+
+#OB Q33:
+df<-arrange(df,Q33)  
+c <- ggplot(df, aes(x=factor(1),y=length(Hospital.ID),fill=Q33))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c<-c+facet_grid(facets=. ~ Collaborative)
+c <-c + coord_polar(theta="y")
+c
+c<-c+geom_text(aes(x=factor(1), y=, label=percent,ymax=percent),position=position_fill(width=1))
+
+#Blood Bank: Q34:
+df<-arrange(df,Q33)  
+c <- ggplot(df, aes(x=factor(1),y=length(Hospital.ID),fill=Q33))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c<-c+facet_grid(facets=. ~ Collaborative)
+c <-c + coord_polar(theta="y")
+c
+c<-c+geom_text(aes(x=factor(1), y=, label=percent,ymax=percent),position=position_fill(width=1))
+
+#Anesthesia
+df<-arrange(df,Q35)  
+c <- ggplot(df, aes(x=factor(1),y=length(Hospital.ID),fill=Q35))
+c<-c+geom_bar(stat="identity",width=1,position="fill")
+c<-c+facet_grid(facets=. ~ Collaborative)
+c <-c + coord_polar(theta="y")
+c
+c<-c+geom_text(aes(x=factor(1), y=, label=percent,ymax=percent),position=position_fill(width=1))
+
+
