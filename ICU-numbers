@@ -1,0 +1,10 @@
+library(ggplot2)
+setwd("L:/PPH Project/data")
+data<-read.csv("ICU Numbers.csv", header=TRUE)  #hemorrhage-related deaths
+
+data$Name<-factor(data$Name, levels=c("Hypertensive disorders of pregnancy", "Hemorrhage", "Cardiomyopathy or other cardiac disease","Genitourinary infection", "Complications from ectopic and abortions", "Non genitourinary infection", "Sepsis", "Cerebrovascular disease", "Pulmonary embolism" ))
+data$Number<-as.numeric(data$Number)
+
+c <- ggplot(data, aes(x=Name, y=Number))
+c<-c+geom_bar(stat="identity",width=0.8)
+c
