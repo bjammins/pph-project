@@ -1,0 +1,7 @@
+library(ggplot2)
+setwd("L:/PPH Project/data")
+df<-read.csv("US Induction of Labor Rates.csv", header=TRUE)  #etiology of hemorrhages
+df$Year<-as.factor(df$Year)
+c <- ggplot(df, aes(x=Year, y=Rate,fill=Year))
+c<-c+geom_bar(stat="identity",width=0.8)
+c
