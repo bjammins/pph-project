@@ -1,0 +1,8 @@
+library(ggplot2)
+setwd("L:/PPH Project/data")
+df<-read.csv("transfusion rates 1998-2009.csv", header=TRUE)
+df$Year<-as.factor(df$Year)
+df$Rate<-as.numeric(df$Rate)
+c <- ggplot(df, aes(x=Year, y=as.numeric(Rate),group=Category))
+c<-c+geom_line()+ylim(0,100)
+c
