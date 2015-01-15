@@ -1,0 +1,8 @@
+library(ggplot2)
+setwd("L:/PPH Project/data")
+df<-read.csv("cesarean rates US.csv", header=TRUE)
+df$Year<-as.factor(df$Year)
+df$percent<-as.numeric(df$percent)
+c <- ggplot(df, aes(x=Year, y=as.numeric(percent), group=category))
+c<-c+geom_line()+ylim(0,0.4)#+scale_y_continuous(breaks=c(0.0,0.05,0.10,0.15,0.20,0.25,0.30,0.35,0.40))
+c
