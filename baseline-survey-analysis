@@ -7,6 +7,7 @@ library(MASS)
 library(car)
 library(lmtest)
 library(ggplot2)
+library(pvclust)
 
 setwd("L:/PPH Project/data")
 data<-read.csv("Baseline Assessment Survey responses.csv", header=TRUE)
@@ -133,6 +134,10 @@ datac$Q25.3<-as.numeric(ifelse(datac$Q25.3 == "Anesthesia physician champion", 1
 
 #Q25.4:  Which of the following people at your hospital are identified and activevely engaged in leading QI initiatives (Other (please specify))?
 datac$Q25.4<-as.numeric(ifelse(datac$Q25.4 == "Other (please specify)", 1,0))
+
+datac$Q25.4[datac$Q25.5=="none"]<-0
+datac$Q25.4[datac$Q25.5=="None"]<-0
+
 
 #Q26:  Does your hospital have a policy and procedure that provides guideance about the AMSTL?
 datac$Q26<-as.numeric(ifelse(datac$Q26 == "Yes", 1,0))
@@ -315,129 +320,229 @@ summarise(b_s_c_14, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
 #Calculating Table 2
 ######################################################################################################################
 b_s_c_15<-group_by(by_state_bcat,Q1, Q15)
-summarise(b_s_c_15, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q15<-summarise(b_s_c_15, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q15_pct<-sum_q15$count[2]/sum(sum_q15$count[1:2])
+NJ_q15_pct<-sum_q15$count[4]/sum(sum_q15$count[3:4])
+sum_q15_tbl<-as.data.frame(rbind(GA_q15_pct,NJ_q15_pct))
+sum_q15_tbl$state<-c("GA", "NJ")
+sum_q15_tbl$Quest<-rep("Q15",dim(sum_q15_tbl)[1])
 
 
 
 #Q16
 b_s_c_16<-group_by(by_state_bcat,Q1, Q16)
-summarise(b_s_c_16, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q16<-summarise(b_s_c_16, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q16_pct<-sum_q16$count[2]/sum(sum_q16$count[1:2])
+NJ_q16_pct<-sum_q16$count[4]/sum(sum_q16$count[3:4])
+sum_q16_tbl<-as.data.frame(rbind(GA_q16_pct,NJ_q16_pct))
+sum_q16_tbl$state<-c("GA", "NJ")
+sum_q16_tbl$Quest<-rep("Q16",dim(sum_q16_tbl)[1])
 
 
 
 #Q17
 b_s_c_17<-group_by(by_state_bcat,Q1, Q17)
-summarise(b_s_c_17, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q17<-summarise(b_s_c_17, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q17_pct<-sum_q17$count[2]/sum(sum_q17$count[1:2])
+NJ_q17_pct<-sum_q17$count[4]/sum(sum_q17$count[3:4])
+sum_q17_tbl<-as.data.frame(rbind(GA_q17_pct,NJ_q17_pct))
+sum_q17_tbl$state<-c("GA", "NJ")
+sum_q17_tbl$Quest<-rep("Q17",dim(sum_q17_tbl)[1])
+
 
 
 #Q18
-b_s_c_18<-group_by(by_state_bcat, Q18)
-summarise(b_s_c_18, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+b_s_c_18<-group_by(by_state_bcat, Q1, Q18)
+sum_q18<-summarise(b_s_c_18, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q18_pct<-sum_q18$count[2]/sum(sum_q18$count[1:2])
+NJ_q18_pct<-sum_q18$count[4]/sum(sum_q18$count[3:4])
+sum_q18_tbl<-as.data.frame(rbind(GA_q18_pct,NJ_q18_pct))
+sum_q18_tbl$state<-c("GA", "NJ")
+sum_q18_tbl$Quest<-rep("Q18",dim(sum_q18_tbl)[1])
 
 
 #Q19: Does your hospital have a policy and procedure for the management of massive postpartum hemorrhages?
 
 b_s_c_19<-group_by(by_state_bcat, Q1,Q19)
-summarise(b_s_c_19, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q19<-summarise(b_s_c_19, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q19_pct<-sum_q19$count[2]/sum(sum_q19$count[1:2])
+NJ_q19_pct<-sum_q19$count[4]/sum(sum_q19$count[3:4])
+sum_q19_tbl<-as.data.frame(rbind(GA_q19_pct,NJ_q19_pct))
+sum_q19_tbl$state<-c("GA", "NJ")
+sum_q19_tbl$Quest<-rep("Q19",dim(sum_q19_tbl)[1])
 
 
 #Q20
-b_s_c_20<-group_by(by_state_bcat,Q20)
-summarise(b_s_c_20, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+b_s_c_20<-group_by(by_state_bcat,Q1, Q20)
+sum_q20<-summarise(b_s_c_20, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q20_pct<-sum_q20$count[2]/sum(sum_q20$count[1:2])
+NJ_q20_pct<-sum_q20$count[4]/sum(sum_q20$count[3:4])
+sum_q20_tbl<-as.data.frame(rbind(GA_q20_pct,NJ_q20_pct))
+sum_q20_tbl$state<-c("GA", "NJ")
+sum_q20_tbl$Quest<-rep("Q20",dim(sum_q20_tbl)[1])
 
 
 #Q21
 b_s_c_21<-group_by(by_state_bcat,Q1, Q21)
-summarise(b_s_c_21, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q21<-summarise(b_s_c_21, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q21_pct<-sum_q21$count[2]/sum(sum_q21$count[1:2])
+NJ_q21_pct<-sum_q21$count[4]/sum(sum_q21$count[3:4])
+sum_q21_tbl<-as.data.frame(rbind(GA_q21_pct,NJ_q21_pct))
+sum_q21_tbl$state<-c("GA", "NJ")
+sum_q21_tbl$Quest<-rep("Q21",dim(sum_q21_tbl)[1])
 
 
 #Q22
-b_s_c_22<-group_by(by_state_bcat, Q22)
-summarise(b_s_c_22, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+b_s_c_22<-group_by(by_state_bcat, Q1, Q22)
+sum_q22<-summarise(b_s_c_22, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q22_pct<-sum_q22$count[2]/sum(sum_q22$count[1:2])
+NJ_q22_pct<-sum_q22$count[4]/sum(sum_q22$count[3:4])
+sum_q22_tbl<-as.data.frame(rbind(GA_q22_pct,NJ_q22_pct))
+sum_q22_tbl$state<-c("GA", "NJ")
+sum_q22_tbl$Quest<-rep("Q22",dim(sum_q22_tbl)[1])
 
 #Q23
 b_s_c_23<-group_by(by_state_bcat, Q1,Q23)
-summarise(b_s_c_23, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q23<-summarise(b_s_c_23, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q23_pct<-sum_q23$count[2]/sum(sum_q23$count[1:2])
+NJ_q23_pct<-sum_q23$count[4]/sum(sum_q23$count[3:4])
+sum_q23_tbl<-as.data.frame(rbind(GA_q23_pct,NJ_q23_pct))
+sum_q23_tbl$state<-c("GA", "NJ")
+sum_q23_tbl$Quest<-rep("Q23",dim(sum_q23_tbl)[1])
 
 #Q24
-b_s_c_24<-group_by(by_state_bcat,Q24)
-summarise(b_s_c_24, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+b_s_c_24<-group_by(by_state_bcat,Q1, Q24)
+sum_q24<-summarise(b_s_c_24, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q24_pct<-sum_q24$count[2]/sum(sum_q24$count[1:2])
+NJ_q24_pct<-sum_q24$count[4]/sum(sum_q24$count[3:4])
+sum_q24_tbl<-as.data.frame(rbind(GA_q24_pct,NJ_q24_pct))
+sum_q24_tbl$state<-c("GA", "NJ")
+sum_q24_tbl$Quest<-rep("Q24",dim(sum_q24_tbl)[1])
 
 
 #Q25
 b_s_c_25<-group_by(by_state_bcat,Q1,Q25)
-summarise(b_s_c_25, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q25<-summarise(b_s_c_25, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q25_pct<-sum_q25$count[2]/sum(sum_q25$count[1:2])
+NJ_q25_pct<-sum_q25$count[4]/sum(sum_q25$count[3:4])
+sum_q25_tbl<-as.data.frame(rbind(GA_q25_pct,NJ_q25_pct))
+sum_q25_tbl$state<-c("GA", "NJ")
+sum_q25_tbl$Quest<-rep("Q25",dim(sum_q25_tbl)[1])
 
 
 #Q25.1
 b_s_c_25.1<-group_by(by_state_bcat,Q1, Q25.1)
-summarise(b_s_c_25.1, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q25.1<-summarise(b_s_c_25.1, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q25.1_pct<-sum_q25.1$count[2]/sum(sum_q25.1$count[1:2])
+NJ_q25.1_pct<-sum_q25.1$count[4]/sum(sum_q25.1$count[3:4])
+sum_q25.1_tbl<-as.data.frame(rbind(GA_q25.1_pct,NJ_q25.1_pct))
+sum_q25.1_tbl$state<-c("GA", "NJ")
+sum_q25.1_tbl$Quest<-rep("Q25.1",dim(sum_q24_tbl)[1])
 
 
 #Q25.2
-b_s_c_25.2<-group_by(by_state_bcat, Q25.2)
-summarise(b_s_c_25.2, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_25.2<-group_by(by_state_bcat, Q1, Q25.2)
+sum_q25.2<-summarise(b_s_c_25.2, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q25.2_pct<-sum_q25.2$count[2]/sum(sum_q25.2$count[1:2])
+NJ_q25.2_pct<-sum_q25.2$count[4]/sum(sum_q25.2$count[3:4])
+sum_q25.2_tbl<-as.data.frame(rbind(GA_q25.2_pct,NJ_q25.2_pct))
+sum_q25.2_tbl$state<-c("GA", "NJ")
+sum_q25.2_tbl$Quest<-rep("Q25.2",dim(sum_q25.2_tbl)[1])
+
+
+
 
 #Q25.3
 b_s_c_25.3<-group_by(by_state_bcat, Q1, Q25.3)
-summarise(b_s_c_25.3, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q25.3<-summarise(b_s_c_25.3, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q25.3_pct<-sum_q25.3$count[2]/sum(sum_q25.3$count[1:2])
+NJ_q25.3_pct<-sum_q25.3$count[4]/sum(sum_q25.3$count[3:4])
+sum_q25.3_tbl<-as.data.frame(rbind(GA_q25.3_pct,NJ_q25.3_pct))
+sum_q25.3_tbl$state<-c("GA", "NJ")
+sum_q25.3_tbl$Quest<-rep("Q25.3",dim(sum_q24_tbl)[1])
+
+
 
 #Q25.4
-b_s_c_25.4<-group_by(by_state_bcat, Q25.4)
+b_s_c_25.4<-group_by(by_state_bcat, Q1, Q25.4)
 summarise(b_s_c_25.4, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
 
 #Q26: Does your hospital have a P and P about the active management of the third stage of labor?
 b_s_c_26<-group_by(by_state_bcat, Q1, Q26)
-summarise(b_s_c_26, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q26<-summarise(b_s_c_26, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q26_pct<-sum_q26$count[2]/sum(sum_q26$count[1:2])
+NJ_q26_pct<-sum_q26$count[4]/sum(sum_q26$count[3:4])
+sum_q26_tbl<-as.data.frame(rbind(GA_q26_pct,NJ_q26_pct))
+sum_q26_tbl$state<-c("GA", "NJ")
+sum_q26_tbl$Quest<-rep("Q26",dim(sum_q26_tbl)[1])
 
 
 #Q27: When were your hospital's protocls last revised/updated?
-b_s_c_27<-group_by(by_state_bcat, Q27)
-summarise(b_s_c_27, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_27<-group_by(by_state_bcat, Q1, Q27)
+sum_q27<-summarise(b_s_c_27, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q27_pct<-sum_q27$count[2]/sum(sum_q27$count[1:2])
+NJ_q27_pct<-sum_q27$count[4]/sum(sum_q27$count[3:4])
+sum_q27_tbl<-as.data.frame(rbind(GA_q27_pct,NJ_q27_pct))
+sum_q27_tbl$state<-c("GA", "NJ")
+sum_q27_tbl$Quest<-rep("Q27",dim(sum_q27_tbl)[1])
+
 
 
 #Q28: Which of the choices below primarly describes how maternal blood loss at your hospital is evaluated within the first 1-2 hours after vaginal birth?
 b_s_c_28<-group_by(by_state_bcat, Q1, Q28)
-summarise(b_s_c_28, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+sum_q28<-summarise(b_s_c_28, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q28_pct<-sum_q28$count[2]/sum(sum_q28$count[1:2])
+NJ_q28_pct<-sum_q28$count[4]/sum(sum_q28$count[3:4])
+sum_q28_tbl<-as.data.frame(rbind(GA_q28_pct,NJ_q28_pct))
+sum_q28_tbl$state<-c("GA", "NJ")
+sum_q28_tbl$Quest<-rep("Q28",dim(sum_q28_tbl)[1])
 
 #Q29: Which of the choices below primarly describes how maternal blood loss at your hospital is evaluated within the first 1-2 hours after cesarean birth?
-b_s_c_29<-group_by(by_state_bcat,Q29)
-summarise(b_s_c_29, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
+b_s_c_29<-group_by(by_state_bcat,Q1,Q29)
+sum_q29<-summarise(b_s_c_29, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q29_pct<-sum_q29$count[2]/sum(sum_q29$count[1:2])
+NJ_q29_pct<-sum_q29$count[4]/sum(sum_q29$count[3:4])
+sum_q29_tbl<-as.data.frame(rbind(GA_q29_pct,NJ_q29_pct))
+sum_q29_tbl$state<-c("GA", "NJ")
+sum_q29_tbl$Quest<-rep("Q29",dim(sum_q29_tbl)[1])
 
 #Q30: Which of the choices below primarly describes how maternal blood loss at your hospital is evaluated 3-12 hours after birth?
 b_s_c_30<-group_by(by_state_bcat,Q1,Q30)
-summarise(b_s_c_30, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q30<-summarise(b_s_c_30, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q30_pct<-sum_q30$count[2]/sum(sum_q30$count[1:2])
+NJ_q30_pct<-sum_q30$count[4]/sum(sum_q30$count[3:4])
+sum_q30_tbl<-as.data.frame(rbind(GA_q30_pct,NJ_q30_pct))
+sum_q30_tbl$state<-c("GA", "NJ")
+sum_q30_tbl$Quest<-rep("Q30",dim(sum_q30_tbl)[1])
 
 
 #Q31: How often does your hospital perform a debriefing of a PPH emergency?
-b_s_c_31<-group_by(by_state_bcat,Q31)
-summarise(b_s_c_31, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_31<-group_by(by_state_bcat,Q1,Q31)
+sum_q31<-summarise(b_s_c_31, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q31_pct<-sum_q31$count[2]/sum(sum_q31$count[1:2])
+NJ_q31_pct<-sum_q31$count[4]/sum(sum_q31$count[3:4])
+sum_q31_tbl<-as.data.frame(rbind(GA_q31_pct,NJ_q31_pct))
+sum_q31_tbl$state<-c("GA", "NJ")
+sum_q31_tbl$Quest<-rep("Q31",dim(sum_q31_tbl)[1])
+
 
 #Q32: How often does your hospital perform a quality review of a PPH emergency?
 b_s_c_32<-group_by(by_state_bcat,Q1, Q32)
-summarise(b_s_c_32, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
-
+sum_q32<-summarise(b_s_c_32, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q32_pct<-sum_q32$count[2]/sum(sum_q32$count[1:2])
+NJ_q32_pct<-sum_q32$count[4]/sum(sum_q32$count[3:4])
+sum_q32_tbl<-as.data.frame(rbind(GA_q32_pct,NJ_q32_pct))
+sum_q32_tbl$state<-c("GA", "NJ")
+sum_q32_tbl$Quest<-rep("Q32",dim(sum_q32_tbl)[1])
 
 #Q34: Does your hospital run PPH simulation drills?
-b_s_c_34<-group_by(by_state_bcat, Q34)
-summarise(b_s_c_34, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
-
-
-
+b_s_c_34<-group_by(by_state_bcat, Q1, Q34)
+sum_q34<-summarise(b_s_c_34, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q34_pct<-sum_q34$count[2]/sum(sum_q34$count[1:2])
+NJ_q34_pct<-sum_q34$count[4]/sum(sum_q34$count[3:4])
+sum_q34_tbl<-as.data.frame(rbind(GA_q34_pct,NJ_q34_pct))
+sum_q34_tbl$state<-c("GA", "NJ")
+sum_q34_tbl$Quest<-rep("Q34",dim(sum_q34_tbl)[1])
 
 
 
@@ -460,31 +565,78 @@ summarise(b_s_c_38.4, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
 
 #Q39: 
 b_s_c_39<-group_by(by_state_bcat, Q1, Q39)
-summarise(b_s_c_39, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q39<-summarise(b_s_c_39, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q39_pct<-sum_q39$count[2]/sum(sum_q39$count[1:2])
+NJ_q39_pct<-sum_q39$count[4]/sum(sum_q39$count[3:4])
+sum_q39_tbl<-as.data.frame(rbind(GA_q39_pct,NJ_q39_pct))
+sum_q39_tbl$state<-c("GA", "NJ")
+sum_q39_tbl$Quest<-rep("Q39",dim(sum_q39_tbl)[1])
+
+
+
+
+
 
 #Q39.1: 
-b_s_c_39.1<-group_by(by_state_bcat,Q39.1)
-summarise(b_s_c_39.1, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_39.1<-group_by(by_state_bcat,Q1, Q39.1)
+sum_q39.1<-summarise(b_s_c_39.1, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q39.1_pct<-sum_q39.1$count[2]/sum(sum_q39.1$count[1:2])
+NJ_q39.1_pct<-sum_q39.1$count[4]/sum(sum_q39.1$count[3:4])
+sum_q39.1_tbl<-as.data.frame(rbind(GA_q39.1_pct,NJ_q39.1_pct))
+sum_q39.1_tbl$state<-c("GA", "NJ")
+sum_q39.1_tbl$Quest<-rep("Q39.1",dim(sum_q39.1_tbl)[1])
+
+
+
 
 #Q39.2: 
 b_s_c_39.2<-group_by(by_state_bcat,Q1, Q39.2)
 summarise(b_s_c_39.2, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
 
 #Q39.3: 
-b_s_c_39.3<-group_by(by_state_bcat, Q39.3)
-summarise(b_s_c_39.3, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_39.3<-group_by(by_state_bcat, Q1, Q39.3)
+sum_q39.3<-summarise(b_s_c_39.3, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q39.3_pct<-sum_q39.3$count[2]/sum(sum_q39.3$count[1:2])
+NJ_q39.3_pct<-sum_q39.3$count[3]/sum(sum_q39.3$count[3])
+sum_q39.3_tbl<-as.data.frame(rbind(GA_q39.3_pct,NJ_q39.3_pct))
+sum_q39.3_tbl$state<-c("GA", "NJ")
+sum_q39.3_tbl$Quest<-rep("Q39.3",dim(sum_q39.3_tbl)[1])
+
+
 
 #Q39.4: 
-b_s_c_39.4<-group_by(by_state_bcat,Q39.4)
-summarise(b_s_c_39.4, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_39.4<-group_by(by_state_bcat,Q1, Q39.4)
+sum_q39.4<-summarise(b_s_c_39.4, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q39.4_pct<-sum_q39.4$count[2]/sum(sum_q39.4$count[1:2])
+NJ_q39.4_pct<-sum_q39.4$count[4]/sum(sum_q39.4$count[3:4])
+sum_q39.4_tbl<-as.data.frame(rbind(GA_q39.4_pct,NJ_q39.4_pct))
+sum_q39.4_tbl$state<-c("GA", "NJ")
+sum_q39.4_tbl$Quest<-rep("Q39.4",dim(sum_q39.4_tbl)[1])
+
 
 #Q40:
 b_s_c_40<-group_by(by_state_bcat,Q1, Q40)
-summarise(b_s_c_40, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q40<-summarise(b_s_c_40, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q40_pct<-sum_q40$count[2]/sum(sum_q40$count[1:2])
+NJ_q40_pct<-sum_q40$count[4]/sum(sum_q40$count[3:4])
+sum_q40_tbl<-as.data.frame(rbind(GA_q40_pct,NJ_q40_pct))
+sum_q40_tbl$state<-c("GA", "NJ")
+sum_q40_tbl$Quest<-rep("Q40",dim(sum_q40_tbl)[1])
+
+
 
 #Q40.1:
 b_s_c_40.1<-group_by(by_state_bcat,Q1, Q40.1)
-summarise(b_s_c_40.1, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q40.1<-summarise(b_s_c_40.1, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q40.1_pct<-sum_q40.1$count[2]/sum(sum_q40.1$count[1:2])
+NJ_q40.1_pct<-sum_q40.1$count[4]/sum(sum_q40.1$count[3:4])
+sum_q40.1_tbl<-as.data.frame(rbind(GA_q40.1_pct,NJ_q40.1_pct))
+sum_q40.1_tbl$state<-c("GA", "NJ")
+sum_q40.1_tbl$Quest<-rep("Q40.1",dim(sum_q40.1_tbl)[1])
+
 
 
 #Q40.2:
@@ -493,27 +645,85 @@ summarise(b_s_c_40.2, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
 
 #Q40.3:
 b_s_c_40.3<-group_by(by_state_bcat, Q1, Q40.3)
-summarise(b_s_c_40.3, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q40.3<-summarise(b_s_c_40.3, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+GA_q40.3_pct<-sum_q40.3$count[2]/sum(sum_q40.3$count[1:2])
+NJ_q40.3_pct<-sum_q40.3$count[4]/sum(sum_q40.3$count[3:4])
+sum_q40.3_tbl<-as.data.frame(rbind(GA_q40.3_pct,NJ_q40.3_pct))
+sum_q40.3_tbl$state<-c("GA", "NJ")
+sum_q40.3_tbl$Quest<-rep("Q40.3",dim(sum_q40.3_tbl)[1])
+
+
+
+
 
 #Q40.4:
-b_s_c_40.4<-group_by(by_state_bcat, Q40.4)
-summarise(b_s_c_40.4, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_40.4<-group_by(by_state_bcat, Q1, Q40.4)
+sum_q40.4<-summarise(b_s_c_40.4, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q40.4_pct<-sum_q40.4$count[2]/sum(sum_q40.4$count[1:2])
+NJ_q40.4_pct<-sum_q40.4$count[4]/sum(sum_q40.4$count[3:4])
+sum_q40.4_tbl<-as.data.frame(rbind(GA_q40.4_pct,NJ_q40.4_pct))
+sum_q40.4_tbl$state<-c("GA", "NJ")
+sum_q40.4_tbl$Quest<-rep("Q40.4",dim(sum_q40.4_tbl)[1])
+
+
+
 
 #Q40.5:
 b_s_c_40.5<-group_by(by_state_bcat, Q1, Q40.5)
-summarise(b_s_c_40.5, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q40.5<-sum_q40.5<-summarise(b_s_c_40.5, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q40.5_pct<-sum_q40.5$count[2]/sum(sum_q40.5$count[1:2])
+NJ_q40.5_pct<-sum_q40.5$count[4]/sum(sum_q40.5$count[3:4])
+sum_q40.5_tbl<-as.data.frame(rbind(GA_q40.5_pct,NJ_q40.5_pct))
+sum_q40.5_tbl$state<-c("GA", "NJ")
+sum_q40.5_tbl$Quest<-rep("Q40.5",dim(sum_q40.5_tbl)[1])
+
+
+
+
+
 
 #Q40.6:
-b_s_c_40.6<-group_by(by_state_bcat,  Q40.6)
-summarise(b_s_c_40.6, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_40.6<-group_by(by_state_bcat, Q1, Q40.6)
+sum_q40.6<-summarise(b_s_c_40.6, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q40.6_pct<-sum_q40.6$count[2]/sum(sum_q40.6$count[1:2])
+NJ_q40.6_pct<-sum_q40.6$count[4]/sum(sum_q40.6$count[3:4])
+sum_q40.6_tbl<-as.data.frame(rbind(GA_q40.6_pct,NJ_q40.6_pct))
+sum_q40.6_tbl$state<-c("GA", "NJ")
+sum_q40.6_tbl$Quest<-rep("Q40.6",dim(sum_q40.6_tbl)[1])
+
+
+
 
 #Q40.7:
 b_s_c_40.7<-group_by(by_state_bcat,  Q1, Q40.7)
-summarise(b_s_c_40.7, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+sum_q40.7<-summarise(b_s_c_40.7, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q40.7_pct<-sum_q40.7$count[2]/sum(sum_q40.7$count[1:2])
+NJ_q40.7_pct<-sum_q40.7$count[4]/sum(sum_q40.7$count[3:4])
+sum_q40.7_tbl<-as.data.frame(rbind(GA_q40.7_pct,NJ_q40.7_pct))
+sum_q40.7_tbl$state<-c("GA", "NJ")
+sum_q40.7_tbl$Quest<-rep("Q40.7",dim(sum_q40.7_tbl)[1])
+
+
+
+
 
 #Q40.8:
-b_s_c_40.8<-group_by(by_state_bcat,  Q40.8)
-summarise(b_s_c_40.8, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+b_s_c_40.8<-group_by(by_state_bcat,  Q1, Q40.8)
+sum_q40.8<-summarise(b_s_c_40.8, count=n(), pct_of_total=n()/dim(by_state_bcat)[1])
+
+GA_q40.8_pct<-sum_q40.8$count[2]/sum(sum_q40.8$count[1:2])
+NJ_q40.8_pct<-sum_q40.8$count[4]/sum(sum_q40.8$count[3:4])
+sum_q40.8_tbl<-as.data.frame(rbind(GA_q40.8_pct,NJ_q40.8_pct))
+sum_q40.8_tbl$state<-c("GA", "NJ")
+sum_q40.8_tbl$Quest<-rep("Q40.8",dim(sum_q40.8_tbl)[1])
+
+
+
+
 
 #######################################################################################################
 #Calculating preparedness score
@@ -592,12 +802,64 @@ quantile(datac_ga$Q7, c(0, 0.25 , 0.75, 1))
 quantile(datac_nj$Q7, c(0, 0.25 , 0.75, 1))
 
 
+newdata_sorted<-datac[order(datac$prepared),]
+newdata_sorted_nj<-datac_nj[order(datac_nj$prepared),]
+newdata_sorted_ga<-datac_ga[order(datac_ga$prepared),]
+
+#Testing whether the means of the cesarean sections rates for the two states are equal
+#perform a variance test
+var.test(datac_ga$Q7,datac_nj$Q7)
+#If variances are equal, perform a normality text
+shapiro.test(datac_ga$Q7)
+shapiro.test(datac_nj$Q7)
+#perform a t-test to determine if the means are equal
+t.test(datac_ga$Q7,datac_nj$Q7)
+
+#Testing whether the means of the preparedness scoresfor the two states are equal
+#perform a variance test
+var.test(datac_ga$prepared,datac_nj$prepared)
+#If variances are equal, perform a normality text
+shapiro.test(datac_ga$prepared)
+shapiro.test(datac_nj$prepared)
+#perform a t-test to determine if the means are equal
+t.test(datac_ga$prepared,datac_nj$prepared)
+
+
+######## K means clustering  ################
+
+cluster_mat<-cbind(datac$Q15,datac$Q16, datac$Q17, datac$Q18, datac$Q19, datac$Q20, datac$Q21, datac$Q22, datac$Q23,datac$Q24, datac$Q25, datac$Q25.1, datac$Q25.2, datac$Q25.3, datac$Q25.4, datac$Q26, datac$Q27, datac$Q28,datac$Q29, datac$Q30, datac$Q31, datac$Q32, datac$Q34, datac$Q38, datac$Q38.1,  datac$Q38.4, datac$Q39, datac$Q39.1, datac$Q39.3, datac$Q39.4, datac$Q40, datac$Q40.1, datac$Q40.3, datac$Q40.4, datac$Q40.5, datac$Q40.6, datac$Q40.7, datac$Q40.8)  #removed uterine artery embolization, prostaglandin E2 suppositories, and non-pneumatic anti shock garment
+colnames(cluster_mat)<-c("Q15","Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q23","Q24", "Q25", "Q25.1", "Q25.2", "Q25.3", "Q25.4", "Q26", "Q27", "Q28","Q29", "Q30", "Q31", "Q32", "Q34", "Q38", "Q38.1",  "Q38.4", "Q39", "Q39.1", "Q39.3", "Q39.4", "Q40", "Q40.1", "Q40.3", "Q40.4", "Q40.5", "Q40.6", "Q40.7", "Q40.8")
+
+#kmeans cluster
+set.seed(3)
+results<-kmeans(cluster_mat, 5, nstart=50)
+
+t_cluster_mat<-t(cluster_mat)
+
+
+fit <- pvclust(cluster_mat, method.hclust="ward",
+               method.dist="euclidean")
+layout(1,1)
+plot(fit) # dendogram with p values
+# add rectangles around groups highly supported by the data
+pvrect(fit, alpha=.95) 
+
+
+matrix<-cbind(t_cluster_mat,c("Q15","Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q23","Q24", "Q25", "Q25.1", "Q25.2", "Q25.3", "Q25.4", "Q26", "Q27", "Q28","Q29", "Q30", "Q31", "Q32", "Q34", "Q38", "Q38.1",  "Q38.4", "Q39", "Q39.1", "Q39.3", "Q39.4", "Q40", "Q40.1", "Q40.3", "Q40.4", "Q40.5", "Q40.6", "Q40.7", "Q40.8"))
+
+
+
+
+datac$prepared<-rowSums(prepared)
+
+
+
 
 ### Histograms######
 pdf("L:/PPH Project/Baseline Assessment/histogram.pdf")
 
 c <- ggplot(datac, aes(x=prepared))
-c<-c + geom_histogram(colour="dark green", binwidth=1, fill="white")
+c<-c + geom_histogram(colour="dark green", binwidth=1, fill="white")+xlim(0, 40)
 
 plot(c)
 
@@ -1288,3 +1550,80 @@ write.csv(cast(datam,Q1+birth_cat~Q43.11,length,margins=TRUE),file="Q43_11.csv")
 #Q43.12
 datam<-melt(datac,id=c("RespondentID","Q1","birth_cat","Q43.12"), measure=c("Q43.12"),na.rm=TRUE)
 write.csv(cast(datam,Q1+birth_cat~Q43.12,length,margins=TRUE),file="Q43_12.csv")
+
+############################Create histograms for the paper##################################
+#definiton bar graph
+
+tbl_def<-rbind(sum_q15_tbl, sum_q16_tbl, sum_q17_tbl, sum_q18_tbl, sum_q19_tbl, sum_q26_tbl, sum_q27_tbl)
+
+pdf("L:/PPH Project/Baseline Assessment/def_tbl.pdf")
+
+c<-ggplot(tbl_def,aes(x=Quest,y=V1,fill=state))+geom_bar(stat="identity", width=0.8, position="dodge")+ylim(0,1)
+
+plot(c)
+
+dev.off()
+
+
+#QBL Risk Assessments
+
+tbl_RA<-rbind(sum_q20_tbl, sum_q21_tbl, sum_q22_tbl, sum_q23_tbl, sum_q24_tbl)
+
+pdf("L:/PPH Project/Baseline Assessment/RA_tbl.pdf")
+
+c<-ggplot(tbl_RA,aes(x=Quest,y=V1,fill=state))+geom_bar(stat="identity", width=0.8, position="dodge")+ylim(0,1)
+
+plot(c)
+
+dev.off()
+
+
+
+#Leading QI Initiatives
+
+tbl_QI<-rbind(sum_q25_tbl, sum_q25.1_tbl, sum_q25.2_tbl, sum_q25.3_tbl)
+
+pdf("L:/PPH Project/Baseline Assessment/QI_tbl.pdf")
+
+c<-ggplot(tbl_QI,aes(x=Quest,y=V1,fill=state))+geom_bar(stat="identity", width=0.8, position="dodge")+ylim(0,1)
+
+plot(c)
+
+dev.off()
+
+
+#QBL bar graph
+
+tbl_QBL<-rbind(sum_q28_tbl, sum_q29_tbl, sum_q31_tbl, sum_q32_tbl, sum_q34_tbl)
+
+pdf("L:/PPH Project/Baseline Assessment/QBL_tbl.pdf")
+
+c<-ggplot(tbl_QBL,aes(x=Quest,y=V1,fill=state))+geom_bar(stat="identity", width=0.8, position="dodge")+ylim(0,1)
+
+plot(c)
+
+dev.off()
+
+#Procedures available for Managing PPH
+
+tbl_procedures<-rbind(sum_q39.4_tbl, sum_q39.1_tbl, sum_q39_tbl, sum_q39.3_tbl)
+
+pdf("L:/PPH Project/Baseline Assessment/procedures_tbl.pdf")
+
+c<-ggplot(tbl_procedures,aes(x=Quest,y=V1,fill=state))+geom_bar(stat="identity", width=0.8, position="dodge")+ylim(0,1)
+
+plot(c)
+
+dev.off()
+
+#Equipment available for Managing PPH
+
+tbl_equipment<-rbind(sum_q40_tbl, sum_q40.1_tbl, sum_q40.3_tbl, sum_q40.4_tbl,sum_q40.5_tbl, sum_q40.6_tbl, sum_q40.7_tbl, sum_q40.8_tbl)
+
+pdf("L:/PPH Project/Baseline Assessment/equipment_tbl.pdf")
+
+c<-ggplot(tbl_equipment,aes(x=Quest,y=V1,fill=state))+geom_bar(stat="identity", width=0.8, position="dodge")+ylim(0,1)
+
+plot(c)
+
+dev.off()
